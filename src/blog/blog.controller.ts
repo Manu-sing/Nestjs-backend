@@ -10,7 +10,9 @@ import {
   Put,
   Query,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { BlogService } from './blog.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';
@@ -34,6 +36,7 @@ export class BlogController {
     return res.status(HttpStatus.OK).json(post);
   }
 
+  @UseGuards(JwtGuard)
   @Post('/post')
   async addPost(@Res() res, @Body() createPostDTO: CreatePostDTO) {
     const newPost = await this.blogService.addPost(createPostDTO);
@@ -42,7 +45,7 @@ export class BlogController {
       post: newPost,
     });
   }
-
+  @UseGuards(JwtGuard)
   @Put('/edit')
   async editPost(
     @Res() res,
@@ -58,7 +61,7 @@ export class BlogController {
       post: editedPost,
     });
   }
-
+  @UseGuards(JwtGuard)
   @Delete('/delete')
   async deletePost(
     @Res() res,
